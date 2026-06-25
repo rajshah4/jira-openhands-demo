@@ -4,6 +4,7 @@ set -euo pipefail
 required_paths=(
   "README.md"
   "discovery/repo-catalog.example.json"
+  "logs/log-sources.example.json"
   "automations/jira/automation.prompt-preset.example.json"
   "automations/jira/prompt.md"
   "skills/sparse-jira-ticket-to-pr/SKILL.md"
@@ -13,6 +14,7 @@ required_paths=(
   "examples/sparse-budget-ticket.md"
   "examples/needs-human-ticket.md"
   "scripts/live_discovery_search.py"
+  "scripts/live_log_search.py"
 )
 
 missing=0

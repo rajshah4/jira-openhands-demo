@@ -60,6 +60,34 @@ The output should rank candidate repos and show matching files/snippets. Tune
 repo hints until discovery looks like a realistic engineer search, not a magic
 answer key.
 
+## Log Source Catalog
+
+Review:
+
+```text
+logs/log-sources.example.json
+```
+
+For a customer environment, replace the sample source with one or more real log
+sources:
+
+- repo-hosted NDJSON files for reproducible demos
+- exported Cloud Logging / Datadog / Splunk search results
+- an internal HTTP endpoint that returns NDJSON
+- attached Jira log files copied into a local path
+
+Run:
+
+```bash
+python3 scripts/live_log_search.py \
+  --catalog logs/log-sources.example.json \
+  --issue examples/sparse-budget-ticket.md
+```
+
+The output should show concrete request/response evidence, not just a prose
+summary. For this demo, the strongest evidence is a budget cap and a response
+item above that cap.
+
 ## OpenHands Secrets
 
 Store secrets in OpenHands/Rajistics, not in this repo.

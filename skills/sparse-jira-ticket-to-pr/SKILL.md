@@ -1,6 +1,6 @@
 ---
 name: sparse-jira-ticket-to-pr
-description: Use when OpenHands receives a short or sparse Jira ticket written in business language and needs to run discovery, determine whether there is enough context, locate the right repository/files, make a safe code change, add tests, open a PR, or ask a human for clarification.
+description: Use when OpenHands receives a short or sparse Jira ticket written in business language and needs to run repository discovery, search logs/evidence, determine whether there is enough context, locate the right repository/files, make a safe code change, add tests, open a PR, or ask a human for clarification.
 ---
 
 # Sparse Jira Ticket to PR
@@ -62,6 +62,38 @@ If no script is available, perform the same search manually:
 - record the top candidates and why the selected repo won
 
 Do not treat a preloaded repo as proof that it is the right repo.
+
+## Log Evidence Pass
+
+Make observability evidence visible. If a log catalog or script is available,
+run it before editing:
+
+```bash
+python3 scripts/live_log_search.py \
+  --catalog logs/log-sources.example.json \
+  --issue examples/sparse-budget-ticket.md
+```
+
+If no script is available, search the configured log system directly:
+
+- search terms from Jira and docs
+- prefer structured request/response logs
+- extract fields such as budget caps, API parameters, returned item ids, and
+  prices/fees
+- correlate events by trace id, request id, session id, query, Jira key, or
+  nearby timestamps
+- record the exact failing example
+
+For the main demo, strong log evidence looks like:
+
+```text
+budget_limit_dollars=75
+max_adoption_fee_cents=7500
+response_item pet_name=Scout adoption_fee_cents=12500
+```
+
+That supports the requirement that search must exclude pets above the requested
+budget cap.
 
 ## Evidence Standards
 
@@ -132,7 +164,9 @@ comment on the Jira issue and mark the work as waiting for human input.
 After a successful PR, comment with:
 
 - interpreted requirement
-- docs/logs used
+- repository discovery evidence
+- log evidence used
+- docs/wiki evidence used
 - repo and files changed
 - tests run
 - PR link

@@ -50,6 +50,7 @@ This keeps the first visible step from feeling prewired:
 ```text
 ticket language
 -> live candidate repo search
+-> structured log evidence search
 -> docs/log evidence
 -> selected repo
 -> files/tests/PR

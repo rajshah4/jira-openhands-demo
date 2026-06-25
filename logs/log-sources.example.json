@@ -1,0 +1,32 @@
+{
+  "description": "Structured log sources for the Jira-to-OpenHands demo. Replace these with customer observability exports or query endpoints when adapting the demo.",
+  "sources": [
+    {
+      "name": "Petstore search structured logs",
+      "type": "repo_ndjson",
+      "repo": {
+        "url": "https://github.com/rajshah4/sdlc-automation-github-demo.git",
+        "ref": "jira-direct-budget-demo-base"
+      },
+      "paths": [
+        "docs/logs/*.ndjson"
+      ],
+      "field_hints": [
+        "budget_limit_dollars",
+        "max_adoption_fee_cents",
+        "adoption_fee_cents",
+        "pet_name",
+        "query",
+        "service",
+        "event"
+      ],
+      "terms": [
+        "budget",
+        "adoption",
+        "fee",
+        "family friendly",
+        "pet-search-api"
+      ]
+    }
+  ]
+}

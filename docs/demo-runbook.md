@@ -49,7 +49,31 @@ The agent is not being handed a file path. It first searches likely systems and
 then explains why it picked this repository.
 ```
 
-## 3. Create The Jira Ticket
+## 3. Run Log Search Once As Presenter
+
+Verify that log evidence search produces a concrete request/response example:
+
+```bash
+python3 scripts/live_log_search.py \
+  --catalog logs/log-sources.example.json \
+  --issue examples/sparse-budget-ticket.md
+```
+
+You should see:
+
+- a customer intake event with `budget_limit_dollars=75`
+- a search request with `max_adoption_fee_cents=7500`
+- a response item such as Scout with `adoption_fee_cents=12500`
+- an over-budget finding showing `12500 > 7500`
+
+Presenter framing:
+
+```text
+This is the observability step. The agent is not just reading a ticket and
+guessing; it is finding a concrete request/response trace that proves the bug.
+```
+
+## 4. Create The Jira Ticket
 
 Use the main ticket from:
 
@@ -60,7 +84,7 @@ examples/sparse-budget-ticket.md
 The ticket should not name the repo, file, API parameter, or implementation
 approach.
 
-## 4. Trigger OpenHands
+## 5. Trigger OpenHands
 
 Preferred:
 
@@ -77,13 +101,15 @@ One-off Rajistics/OpenHands prompt automation against the known Jira issue
 If using fallback, say so in the demo. It validates the agent workflow, not the
 webhook delivery path.
 
-## 5. Watch The Agent
+## 6. Watch The Agent
 
 In the OpenHands conversation, show the agent:
 
 - reading the Jira issue
 - running the live discovery search
 - ranking candidate repositories
+- running the structured log search
+- identifying the over-budget response item
 - finding docs/wiki context
 - reading log evidence
 - identifying the target repository
@@ -95,7 +121,7 @@ In the OpenHands conversation, show the agent:
 - opening a draft PR
 - commenting back to Jira
 
-## 6. Review The PR
+## 7. Review The PR
 
 The PR should show:
 
@@ -112,7 +138,7 @@ OpenHands did the engineering legwork, but GitHub is still the review and merge
 boundary.
 ```
 
-## 7. Return To Jira
+## 8. Return To Jira
 
 Show the completion comment:
 
@@ -131,7 +157,7 @@ Jira remains the system of record. The agent brings evidence back to the ticket
 instead of making the team hunt through a separate tool.
 ```
 
-## 8. Human-In-The-Loop Variant
+## 9. Human-In-The-Loop Variant
 
 Create the ticket from:
 
@@ -152,7 +178,7 @@ The presenter message:
 The agent is useful because it knows when not to act.
 ```
 
-## 9. Cleanup
+## 10. Cleanup
 
 After rehearsal:
 

@@ -27,16 +27,17 @@ problem this maps to and whether there is enough evidence to act.
 
 ## Scene 2: Context Gathering
 
-Show the agent running discovery search before it reads docs and logs.
+Show the agent running discovery search and then structured log search before it
+edits code.
 
 Say:
 
 ```text
 OpenHands is not being handed a path. It first searches candidate repositories
-and context sources using the language from the ticket. Then it uses the same
-evidence an engineer would use: product docs, repo-local guidance, and logs.
-The docs connect budget language to adoption affordability. The logs show that
-a customer with a $75 budget received a pet with a $125 adoption fee.
+using the language from the ticket. Then it searches structured logs for a real
+request/response example. The docs connect budget language to adoption
+affordability, and the logs show that a customer with a $75 budget received a
+pet with a $125 adoption fee.
 ```
 
 ## Scene 3: Repo And File Discovery
@@ -55,6 +56,19 @@ Optional line:
 ```text
 This is deliberately more realistic than a toy prompt. In customer settings,
 the hard part is often finding the right system from an underspecified ticket.
+```
+
+## Scene 3A: Observability Evidence
+
+Show the log search output.
+
+Say:
+
+```text
+This is the moment that makes the demo feel real. The agent found an intake
+event with budget_limit_dollars=75, a search request with
+max_adoption_fee_cents=7500, and a response item where Scout had
+adoption_fee_cents=12500. That is the evidence for the code change.
 ```
 
 ## Scene 4: Code And Tests
