@@ -27,15 +27,16 @@ problem this maps to and whether there is enough evidence to act.
 
 ## Scene 2: Context Gathering
 
-Show the agent reading docs and logs.
+Show the agent running discovery search before it reads docs and logs.
 
 Say:
 
 ```text
-OpenHands is using the same context an engineer would use: product docs,
-repo-local guidance, and logs. The docs connect budget language to adoption
-affordability. The logs show that a customer with a $75 budget received a pet
-with a $125 adoption fee.
+OpenHands is not being handed a path. It first searches candidate repositories
+and context sources using the language from the ticket. Then it uses the same
+evidence an engineer would use: product docs, repo-local guidance, and logs.
+The docs connect budget language to adoption affordability. The logs show that
+a customer with a $75 budget received a pet with a $125 adoption fee.
 ```
 
 ## Scene 3: Repo And File Discovery
@@ -47,6 +48,13 @@ Say:
 ```text
 The Jira issue did not name a repo. OpenHands has to locate ownership before it
 edits. In this demo, it identifies Petstore catalog search as the right surface.
+```
+
+Optional line:
+
+```text
+This is deliberately more realistic than a toy prompt. In customer settings,
+the hard part is often finding the right system from an underspecified ticket.
 ```
 
 ## Scene 4: Code And Tests

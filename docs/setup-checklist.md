@@ -36,6 +36,30 @@ Choose a base branch in the target app repo that contains:
 - log fixture showing the budget/adoption-fee mismatch
 - no pre-applied catalog fix, so the agent has real work to do
 
+## Discovery Catalog
+
+Review:
+
+```text
+discovery/repo-catalog.example.json
+```
+
+For a customer environment, replace the sample repos with likely application
+repos, service repos, docs repos, or monorepo paths. Keep the candidate set
+small enough for a live demo, usually 3-8 repos.
+
+Run:
+
+```bash
+python3 scripts/live_discovery_search.py \
+  --catalog discovery/repo-catalog.example.json \
+  --issue examples/sparse-budget-ticket.md
+```
+
+The output should rank candidate repos and show matching files/snippets. Tune
+repo hints until discovery looks like a realistic engineer search, not a magic
+answer key.
+
 ## OpenHands Secrets
 
 Store secrets in OpenHands/Rajistics, not in this repo.

@@ -7,10 +7,11 @@ OpenHands workflow. It is not the application repo and it is not a work log.
 It contains the steps, prompt template, OpenHands skill, Jira ticket examples,
 and presenter runbook needed to understand and reproduce the demo.
 
-The target application lives in
-[`rajshah4/sdlc-automation-github-demo`](https://github.com/rajshah4/sdlc-automation-github-demo).
-That repo contains the small Petstore app, repo-local context, tests, and the
-branch/PR artifacts the automation produces.
+The target application for the canonical run is
+[`rajshah4/sdlc-automation-github-demo`](https://github.com/rajshah4/sdlc-automation-github-demo),
+but the demo should not feel like the agent was simply handed that answer. The
+kit includes a live discovery step that searches candidate repositories and
+shows why the Petstore repo is the right target.
 
 ## Demo Thesis
 
@@ -35,14 +36,15 @@ GitHub for review, and human approval for merge.
 ## What The Audience Sees
 
 1. A Jira task says only: "Families need to find pets in their budget."
-2. OpenHands reads docs and log evidence to connect "budget" and "afford" to
+2. OpenHands runs a discovery search across candidate repositories.
+3. OpenHands reads docs and log evidence to connect "budget" and "afford" to
    adoption fee filtering.
-3. OpenHands finds the Petstore catalog search code in the correct repo.
-4. OpenHands adds a max adoption fee filter and focused tests.
-5. OpenHands opens a draft GitHub PR.
-6. OpenHands comments back on Jira with the interpreted requirement, files
+4. OpenHands finds the Petstore catalog search code in the selected repo.
+5. OpenHands adds a max adoption fee filter and focused tests.
+6. OpenHands opens a draft GitHub PR.
+7. OpenHands comments back on Jira with the interpreted requirement, files
    changed, tests run, PR link, assumptions, and human-review next steps.
-7. A second intentionally vague ticket demonstrates the safety behavior:
+8. A second intentionally vague ticket demonstrates the safety behavior:
    OpenHands should ask for clarification instead of guessing.
 
 ## Architecture
@@ -60,9 +62,10 @@ Rajistics / OpenHands automation
 OpenHands agent with repo-local skill guidance
         |
         +--> Jira issue details
+        +--> live repository discovery search
         +--> docs/wiki context
         +--> log evidence
-        +--> GitHub repository
+        +--> selected GitHub repository
         |
         v
 Draft PR + tests + Jira completion comment
@@ -73,11 +76,13 @@ Draft PR + tests + Jira completion comment
 | Path | Purpose |
 | --- | --- |
 | `automations/jira/` | Prompt-preset automation template and trigger notes for Jira events. |
+| `discovery/` | Candidate repository catalog for live discovery. |
 | `skills/sparse-jira-ticket-to-pr/` | OpenHands skill that teaches the agent how to handle sparse Jira tickets safely. |
 | `examples/` | Copy/paste Jira ticket examples for the main path and the human-in-loop path. |
 | `docs/setup-checklist.md` | Prerequisites and configuration checklist. |
 | `docs/demo-runbook.md` | Step-by-step reproduction flow. |
 | `docs/customer-demo-script.md` | Presenter talk track. |
+| `scripts/live_discovery_search.py` | Clones/searches candidate repos so discovery is visible and reproducible. |
 | `scripts/check_demo_repo.sh` | Lightweight repo sanity check. |
 
 Private working logs and scratch worktrees are ignored by git. They belong on
@@ -97,6 +102,14 @@ Validate the demo kit:
 ```bash
 cd jira-openhands-demo
 bash scripts/check_demo_repo.sh
+```
+
+Run the live discovery search:
+
+```bash
+python3 scripts/live_discovery_search.py \
+  --catalog discovery/repo-catalog.example.json \
+  --issue examples/sparse-budget-ticket.md
 ```
 
 Then follow:
@@ -146,6 +159,11 @@ This repo includes a reusable skill and a prompt-preset template:
 Customers should be able to inspect these files and see how the behavior is
 bounded. The agent is instructed to gather evidence, make the smallest safe
 change, create tests, open a draft PR, and ask for help when context is missing.
+
+The discovery script is intentionally simple and inspectable. It does not rely
+on GitHub code-search indexing. It clones the configured candidate repos into a
+temporary directory, searches docs/logs/code for issue terms and configured
+hints, and prints ranked evidence for the agent or presenter.
 
 ## Secrets And Live Systems
 

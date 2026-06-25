@@ -1,12 +1,6 @@
 ---
 name: sparse-jira-ticket-to-pr
-description: Use when OpenHands receives a short Jira ticket and needs to determine whether it has enough context to locate the right repository, make a safe code change, add tests, open a PR, or ask a human for clarification.
-triggers:
-  - Jira ticket
-  - sparse ticket
-  - business language
-  - open PR
-  - ask human
+description: Use when OpenHands receives a short or sparse Jira ticket written in business language and needs to run discovery, determine whether there is enough context, locate the right repository/files, make a safe code change, add tests, open a PR, or ask a human for clarification.
 ---
 
 # Sparse Jira Ticket to PR
@@ -37,14 +31,37 @@ If any of those are missing, ask a human instead of guessing.
    - attachments
    - linked docs or incidents
 2. Search the available docs/wiki context for business terms from the ticket.
-3. Search logs or attached evidence for concrete request/response examples.
-4. Identify the owning repository and files.
-5. State the inferred requirement before editing.
-6. Implement the smallest safe change.
-7. Add or update focused tests.
-8. Run tests and capture the exact command/results.
-9. Open a draft PR.
-10. Comment back to Jira with evidence and next steps.
+3. Run a live discovery pass across candidate repositories or systems.
+4. Search logs or attached evidence for concrete request/response examples.
+5. Identify the owning repository and files.
+6. State the inferred requirement before editing.
+7. Implement the smallest safe change.
+8. Add or update focused tests.
+9. Run tests and capture the exact command/results.
+10. Open a draft PR.
+11. Comment back to Jira with evidence and next steps.
+
+## Discovery Pass
+
+Make discovery visible. If a repo catalog or script is available, run it before
+editing:
+
+```bash
+python3 scripts/live_discovery_search.py \
+  --catalog discovery/repo-catalog.example.json \
+  --issue examples/sparse-budget-ticket.md
+```
+
+If no script is available, perform the same search manually:
+
+- list candidate repos or systems in the allowed org/workspace
+- search business terms from the Jira issue
+- include synonyms from docs, such as budget, afford, fee, price, adoption,
+  search, filter, catalog
+- look for a combination of docs/log evidence and code ownership
+- record the top candidates and why the selected repo won
+
+Do not treat a preloaded repo as proof that it is the right repo.
 
 ## Evidence Standards
 

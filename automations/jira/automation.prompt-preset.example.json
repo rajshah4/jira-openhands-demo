@@ -9,8 +9,8 @@
   "timeout": 1800,
   "repos": [
     {
-      "url": "https://github.com/rajshah4/sdlc-automation-github-demo",
-      "ref": "TARGET_BASE_BRANCH"
+      "url": "https://github.com/rajshah4/jira-openhands-demo",
+      "ref": "main"
     }
   ],
   "prompt_file": "prompt.md"

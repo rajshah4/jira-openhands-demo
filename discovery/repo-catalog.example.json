@@ -1,0 +1,40 @@
+{
+  "description": "Candidate repositories for the Jira-to-OpenHands discovery demo. Replace these with customer repos when adapting the demo.",
+  "repos": [
+    {
+      "name": "Petstore SDLC automation demo",
+      "url": "https://github.com/rajshah4/sdlc-automation-github-demo.git",
+      "ref": "jira-direct-budget-demo-base",
+      "hints": [
+        "petstore",
+        "adoption",
+        "catalog",
+        "budget",
+        "fee",
+        "search"
+      ]
+    },
+    {
+      "name": "SRE Cloud Run demo",
+      "url": "https://github.com/rajshah4/sre-cloud-demo.git",
+      "ref": "main",
+      "hints": [
+        "incident",
+        "cloud run",
+        "checkout",
+        "status"
+      ]
+    },
+    {
+      "name": "Trade confirmation demo",
+      "url": "https://github.com/rajshah4/trade-confirm-demo.git",
+      "ref": "main",
+      "hints": [
+        "trade",
+        "confirmation",
+        "finance",
+        "workflow"
+      ]
+    }
+  ]
+}

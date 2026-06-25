@@ -39,13 +39,28 @@ issue.fields.project.key == 'KAN' && issue.fields.issuetype.name == 'Task'
 
 Adjust the project key and issue type for the customer environment.
 
+## Discovery Shape
+
+For the most realistic demo, preload or clone this demo kit in the automation
+runtime, not just the target app repo. The agent should run the discovery
+script, rank candidate repos, then clone or switch to the selected app repo.
+
+This keeps the first visible step from feeling prewired:
+
+```text
+ticket language
+-> live candidate repo search
+-> docs/log evidence
+-> selected repo
+-> files/tests/PR
+```
+
 ## Registering The Automation
 
 Use `automation.prompt-preset.example.json` as the starting point. Replace:
 
 - `PROJECT_KEY`
-- `TARGET_REPO_URL`
-- `TARGET_BASE_BRANCH`
+- candidate repos in `discovery/repo-catalog.example.json`
 - Jira site/project details in the prompt
 - any customer-specific docs/log locations
 
