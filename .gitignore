@@ -1,0 +1,25 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+
+# Local/private notes. Keep these on the presenter's machine, not GitHub.
+working-log.md
+build-plan.md
+demo-story.md
+implementation-summary.md
+live-action-approval.md
+local-notes/
+
+# Local scratch worktrees copied while building the demo.
+live-repo/
+live-repo-base/
+live-repo-v2/
+worktree/
+
+# Python/editor noise.
+__pycache__/
+.pytest_cache/
+.venv/
+.idea/
+.vscode/

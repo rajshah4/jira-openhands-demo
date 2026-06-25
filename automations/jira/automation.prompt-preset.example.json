@@ -1,0 +1,17 @@
+{
+  "name": "Jira Sparse Ticket to PR",
+  "trigger": {
+    "type": "event",
+    "source": "jira-direct",
+    "on": "jira:issue_created",
+    "filter": "issue.fields.project.key == 'PROJECT_KEY' && issue.fields.issuetype.name == 'Task'"
+  },
+  "timeout": 1800,
+  "repos": [
+    {
+      "url": "https://github.com/rajshah4/sdlc-automation-github-demo",
+      "ref": "TARGET_BASE_BRANCH"
+    }
+  ],
+  "prompt_file": "prompt.md"
+}
