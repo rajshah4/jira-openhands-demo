@@ -36,7 +36,8 @@ Before the live agent run, verify the discovery search produces a useful result:
 ```bash
 python3 scripts/live_discovery_search.py \
   --catalog discovery/repo-catalog.example.json \
-  --issue examples/sparse-budget-ticket.md
+  --issue examples/sparse-budget-ticket.md \
+  --presenter-mode
 ```
 
 You should see the Petstore SDLC demo repo rank highly because it contains
@@ -56,7 +57,8 @@ Verify that log evidence search produces a concrete request/response example:
 ```bash
 python3 scripts/live_log_search.py \
   --catalog logs/log-sources.example.json \
-  --issue examples/sparse-budget-ticket.md
+  --issue examples/sparse-budget-ticket.md \
+  --presenter-mode
 ```
 
 You should see:
@@ -100,6 +102,23 @@ One-off Rajistics/OpenHands prompt automation against the known Jira issue
 
 If using fallback, say so in the demo. It validates the agent workflow, not the
 webhook delivery path.
+
+## Timing
+
+Measured locally with presenter mode enabled:
+
+| Step | Typical time | Notes |
+| --- | ---: | --- |
+| Live repo discovery script | 4-5 seconds | Presenter mode enabled; clones three small candidate repos and ranks evidence. |
+| Live log evidence script | 2-3 seconds | Presenter mode enabled; clones one repo-hosted NDJSON source and extracts field evidence. |
+| OpenHands sandbox/conversation startup | 30-90 seconds | Depends on Rajistics/OpenHands runtime availability. |
+| Agent context gathering and implementation | 5-8 minutes | Includes repo read, code edit, tests, branch, and PR. |
+| Jira completion comment | 30-60 seconds | Usually near the end of the same agent run. |
+
+Plan for an 8-12 minute live automation from trigger to Jira completion
+comment. With presenter narration and PR/Jira walkthrough, the customer-facing
+demo is usually 12-15 minutes. If you also show the human-in-loop variant, plan
+for 15-20 minutes.
 
 ## 6. Watch The Agent
 

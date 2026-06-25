@@ -68,7 +68,8 @@ Before editing, perform a visible search step. Preferred pattern:
 ```bash
 python3 scripts/live_discovery_search.py \
   --catalog discovery/repo-catalog.example.json \
-  --issue examples/sparse-budget-ticket.md
+  --issue examples/sparse-budget-ticket.md \
+  --presenter-mode
 ```
 
 If that script is not available inside the runtime, reproduce the same behavior
@@ -90,8 +91,14 @@ After repository discovery, run a visible log search step:
 ```bash
 python3 scripts/live_log_search.py \
   --catalog logs/log-sources.example.json \
-  --issue examples/sparse-budget-ticket.md
+  --issue examples/sparse-budget-ticket.md \
+  --presenter-mode
 ```
+
+After each command, summarize the result in plain language before moving on.
+For example: "The Petstore repo ranked first because it has affordability docs,
+budget logs, and catalog search code" and "The logs show Scout at 12500 cents
+returned for a 7500 cent cap."
 
 If that script is not available, reproduce the same behavior manually:
 

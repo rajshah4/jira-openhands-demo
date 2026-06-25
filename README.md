@@ -114,7 +114,8 @@ Run the live discovery search:
 ```bash
 python3 scripts/live_discovery_search.py \
   --catalog discovery/repo-catalog.example.json \
-  --issue examples/sparse-budget-ticket.md
+  --issue examples/sparse-budget-ticket.md \
+  --presenter-mode
 ```
 
 Run the live log evidence search:
@@ -122,7 +123,8 @@ Run the live log evidence search:
 ```bash
 python3 scripts/live_log_search.py \
   --catalog logs/log-sources.example.json \
-  --issue examples/sparse-budget-ticket.md
+  --issue examples/sparse-budget-ticket.md \
+  --presenter-mode
 ```
 
 Then follow:
@@ -179,6 +181,9 @@ candidate repos and ranks evidence. The log script searches configured
 structured log sources, parses NDJSON events, and highlights field-level
 evidence such as `budget_limit_dollars`, `max_adoption_fee_cents`, and
 over-budget response items.
+
+Use `--presenter-mode` during live demos. It adds short stage headers and small
+pauses so the automation trace is readable while people are watching.
 
 ## Secrets And Live Systems
 

@@ -18,6 +18,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import urllib.request
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -67,6 +68,16 @@ def run(command: list[str]) -> subprocess.CompletedProcess[str]:
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
+
+
+def presenter_step(enabled: bool, delay: float, label: str, detail: str = "") -> None:
+    if not enabled:
+        return
+    print(f"\n{label}", flush=True)
+    if detail:
+        print(detail, flush=True)
+    if delay > 0:
+        time.sleep(delay)
 
 
 def extract_terms(text: str, extra_terms: list[str]) -> list[str]:
@@ -220,15 +231,31 @@ def main() -> int:
     parser.add_argument("--max-events", type=int, default=8, help="Maximum matched events to print per source.")
     parser.add_argument("--workdir", type=Path, help="Directory for cloned repos/downloads. Defaults to a temp dir.")
     parser.add_argument("--keep-workdir", action="store_true", help="Keep temporary files after the search.")
+    parser.add_argument("--presenter-mode", action="store_true", help="Print slower, stage-oriented output for live demos.")
+    parser.add_argument(
+        "--step-delay",
+        type=float,
+        default=None,
+        help="Seconds to pause after presenter-mode stage messages. Defaults to 0.6 with --presenter-mode.",
+    )
     args = parser.parse_args()
+    step_delay = args.step_delay if args.step_delay is not None else (0.6 if args.presenter_mode else 0.0)
 
     if shutil.which("git") is None:
         print("git is required", file=sys.stderr)
         return 1
 
+    presenter_step(args.presenter_mode, step_delay, "[logs 1/4] Reading Jira ticket language", str(args.issue))
     catalog = json.loads(args.catalog.read_text(encoding="utf-8"))
     issue_text = args.issue.read_text(encoding="utf-8", errors="ignore")
     base_terms = extract_terms(issue_text, args.term)
+    source_count = len(catalog.get("sources", []))
+    presenter_step(
+        args.presenter_mode,
+        step_delay,
+        "[logs 2/4] Loading structured log source catalog",
+        f"{source_count} source(s) from {args.catalog}",
+    )
 
     if args.workdir:
         workdir = args.workdir
@@ -242,6 +269,12 @@ def main() -> int:
         print("Live log evidence")
         print("=================")
         all_events: list[LogEvent] = []
+        presenter_step(
+            args.presenter_mode,
+            step_delay,
+            "[logs 3/4] Fetching and parsing log events",
+            "Searching NDJSON for request, response, budget, and fee fields.",
+        )
         for source in catalog.get("sources", []):
             print(f"\n{source.get('name', 'unnamed source')}")
             print("-" * len(source.get("name", "unnamed source")))
@@ -267,6 +300,12 @@ def main() -> int:
                 print(f"  fields: {', '.join(event.matched_fields) or '-'}")
                 print(f"  event: {compact_event(event)}")
 
+        presenter_step(
+            args.presenter_mode,
+            step_delay,
+            "[logs 4/4] Extracting request/response evidence",
+            "Looking for budget caps and response items over the cap.",
+        )
         findings = find_over_budget(all_events)
         if findings:
             print("\nEvidence findings")

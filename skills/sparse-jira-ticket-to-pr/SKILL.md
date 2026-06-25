@@ -49,7 +49,8 @@ editing:
 ```bash
 python3 scripts/live_discovery_search.py \
   --catalog discovery/repo-catalog.example.json \
-  --issue examples/sparse-budget-ticket.md
+  --issue examples/sparse-budget-ticket.md \
+  --presenter-mode
 ```
 
 If no script is available, perform the same search manually:
@@ -71,8 +72,12 @@ run it before editing:
 ```bash
 python3 scripts/live_log_search.py \
   --catalog logs/log-sources.example.json \
-  --issue examples/sparse-budget-ticket.md
+  --issue examples/sparse-budget-ticket.md \
+  --presenter-mode
 ```
+
+After each scripted pass, briefly state what was learned before continuing.
+This makes the automation trace readable for humans watching the run.
 
 If no script is available, search the configured log system directly:
 

@@ -16,6 +16,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -118,6 +119,16 @@ def run(command: list[str], cwd: Path | None = None) -> subprocess.CompletedProc
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
+
+
+def presenter_step(enabled: bool, delay: float, label: str, detail: str = "") -> None:
+    if not enabled:
+        return
+    print(f"\n{label}", flush=True)
+    if detail:
+        print(detail, flush=True)
+    if delay > 0:
+        time.sleep(delay)
 
 
 def read_issue(path: Path) -> str:
@@ -248,8 +259,17 @@ def main() -> int:
     parser.add_argument("--max-matches", type=int, default=5, help="Maximum file matches to show per repo.")
     parser.add_argument("--workdir", type=Path, help="Directory for cloned repos. Defaults to a temp dir.")
     parser.add_argument("--keep-workdir", action="store_true", help="Keep temporary clones after the search.")
+    parser.add_argument("--presenter-mode", action="store_true", help="Print slower, stage-oriented output for live demos.")
+    parser.add_argument(
+        "--step-delay",
+        type=float,
+        default=None,
+        help="Seconds to pause after presenter-mode stage messages. Defaults to 0.6 with --presenter-mode.",
+    )
     args = parser.parse_args()
+    step_delay = args.step_delay if args.step_delay is not None else (0.6 if args.presenter_mode else 0.0)
 
+    presenter_step(args.presenter_mode, step_delay, "[discovery 1/4] Reading Jira ticket language", str(args.issue))
     catalog = json.loads(args.catalog.read_text(encoding="utf-8"))
     repos = catalog.get("repos", [])[: args.max_repos]
     if not repos:
@@ -261,6 +281,12 @@ def main() -> int:
         return 1
 
     terms = extract_terms(read_issue(args.issue), args.term)
+    presenter_step(
+        args.presenter_mode,
+        step_delay,
+        "[discovery 2/4] Loading candidate repository catalog",
+        f"{len(repos)} candidate repos from {args.catalog}",
+    )
     if args.workdir:
         workdir = args.workdir
         workdir.mkdir(parents=True, exist_ok=True)
@@ -270,9 +296,27 @@ def main() -> int:
         cleanup = not args.keep_workdir
 
     try:
+        presenter_step(
+            args.presenter_mode,
+            step_delay,
+            "[discovery 3/4] Cloning and searching candidates",
+            "Searching docs, logs, skills, tests, and code for ticket terms.",
+        )
         results = [search_repo(repo, workdir, terms, args.max_matches) for repo in repos]
+        presenter_step(
+            args.presenter_mode,
+            step_delay,
+            "[discovery 4/4] Ranking repositories by evidence",
+            "Higher scores mean stronger business/docs/log/code alignment.",
+        )
         results.sort(key=lambda item: item.score, reverse=True)
         print_results(results)
+        if args.presenter_mode and results:
+            winner = results[0]
+            print(
+                f"\nSelected candidate: {winner.name} "
+                f"(score {winner.score}; {len(winner.matches)} supporting files)"
+            )
         if args.keep_workdir or args.workdir:
             print(f"\nclones kept at: {workdir}")
     finally:

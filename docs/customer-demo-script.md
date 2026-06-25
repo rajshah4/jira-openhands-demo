@@ -40,6 +40,19 @@ affordability, and the logs show that a customer with a $75 budget received a
 pet with a $125 adoption fee.
 ```
 
+Point out the stage headers in the automation output:
+
+```text
+[discovery 1/4] Reading Jira ticket language
+[discovery 2/4] Loading candidate repository catalog
+[discovery 3/4] Cloning and searching candidates
+[discovery 4/4] Ranking repositories by evidence
+[logs 1/4] Reading Jira ticket language
+[logs 2/4] Loading structured log source catalog
+[logs 3/4] Fetching and parsing log events
+[logs 4/4] Extracting request/response evidence
+```
+
 ## Scene 3: Repo And File Discovery
 
 Show the agent finding the target repo and catalog files.
